@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Stock</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- Responsive Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="dashboard.html">
@@ -81,7 +80,7 @@
         </div>
     </main>
 
-    <!-- Modal for Adding New Item -->
+    <!-- Adding New Item -->
     <div class="modal fade" id="addItemModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -129,7 +128,7 @@
         </div>
     </div>
 
-    <!-- Modal for Managing Item (Restock / Change Price / Delete) -->
+    <!--  Managing Item (Restock / Change Price / Delete) -->
     <div class="modal fade" id="manageItemModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -141,7 +140,7 @@
                     <input type="hidden" id="manageSku">
                     <p class="mb-3 text-muted small">Selected Item: <strong id="manageItemNameDisplay" class="text-dark"></strong></p>
                     
-                    <!-- Restock Form Section -->
+                    <!-- Restock -->
                     <form id="restockForm" class="mb-3 pb-3 border-bottom">
                         <h6 class="fw-semibold text-success mb-2"><i class="bi bi-plus-circle me-1"></i> Restock Item</h6>
                         <div class="mb-2">
@@ -151,7 +150,7 @@
                         <button type="submit" class="btn btn-success btn-sm w-100">Confirm Restock</button>
                     </form>
 
-                    <!-- Change Price Form Section -->
+                    <!-- Change Price  -->
                     <form id="changePriceForm" class="mb-3 pb-3 border-bottom">
                         <h6 class="fw-semibold text-primary mb-2"><i class="bi bi-tag me-1"></i> Change Price</h6>
                         <div class="mb-2">
@@ -161,7 +160,7 @@
                         <button type="submit" class="btn btn-primary btn-sm w-100">Update Price</button>
                     </form>
 
-                    <!-- Delete Section -->
+                    <!-- Delete -->
                     <div>
                         <h6 class="fw-semibold text-danger mb-2"><i class="bi bi-trash me-1"></i> Delete Item</h6>
                         <p class="text-muted small mb-2">Permanently remove this item from the inventory list.</p>
@@ -200,7 +199,6 @@
             window.location.href = 'index.html';
         });
 
-        // Initialize default inventory items with Fruit, Vegetable, Snack, Drink if not present
         if (!localStorage.getItem('inventoryItems')) {
             const defaultInventory = [
                 { sku: 'PRD-101', name: 'Fresh Apple', category: 'Fruit', qty: 45, price: 2.00 },
@@ -211,12 +209,12 @@
             localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
         }
 
-        // Initialize salesHistory if not already present
+       
         if (!localStorage.getItem('salesHistory')) {
             localStorage.setItem('salesHistory', JSON.stringify([]));
         }
 
-        // Function to calculate and generate the next available SKU (fills gaps if items are deleted)
+        
         function generateNextSku() {
             let inventory = JSON.parse(localStorage.getItem('inventoryItems')) || [];
             
@@ -315,7 +313,7 @@
 
             renderInventoryTable();
 
-            // Reset form, hide error, and close modal
+            // Reset form
             document.getElementById('addItemForm').reset();
             errorAlert.classList.add('d-none');
             const modalElement = document.getElementById('addItemModal');
