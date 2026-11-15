@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SuperSave Mart</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Stylesheet -->
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="login-body">
+
+    <div class="login-split-wrapper shadow-lg">
+        <div class="row g-0 align-items-center">
+            
+            <!-- Left Side: Branding & Side-by-Side Images -->
+            <div class="col-md-6 branding-section text-center">
+                <div class="branding-header">
+                    <i class="bi bi-cart3 text-dark" style="font-size: 4.5rem;"></i>
+                    <h1 class="branding-title">SuperSave Mart</h1>
+                </div>
+                
+                <div class="image-row">
+                    <!-- Fresh Produce Image -->
+                    <img src="vege.jpg" 
+                         alt="Fresh Produce" 
+                         class="side-img">
+                    
+                    <!-- Drinks Image -->
+                    <img src="drink.jpg" 
+                         alt="Drinks" 
+                         class="side-img">
+                </div>
+            </div>
+
+            <!-- Right Side: Login Card -->
+            <div class="col-md-6">
+                <div class="login-card">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-basket-fill text-primary fs-1"></i>
+                        <h3 class="fw-bold mt-2 text-dark">Mart Storage System</h3>
+                        <p class="text-muted small">Sign in to manage inventory & sales</p>
+                    </div>
+
+                    <div id="errorAlert" class="alert alert-danger d-none py-2 small" role="alert">
+                        Invalid username, password, or role selected. Please try again.
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="roleSelect" class="form-label small fw-semibold">Select Role</label>
+                            <select class="form-select" id="roleSelect" required>
+                                <option value="" disabled selected>Choose your role...</option>
+                                <option value="manager">Store Manager</option>
+                                <option value="boss">Boss</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label small fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="username" placeholder="Enter username" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label small fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                                <input type="password" class="form-control border-start-0" id="password" placeholder="Enter password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Sign In</button>
+                    </form>
+
+                    <div class="mt-4 text-center text-muted" style="font-size: 0.8rem;">
+                        <p class="mb-1"><strong>Test Credentials:</strong></p>
+                        <p class="mb-0">Manager: <code class="text-danger">manager / 1234</code></p>
+                        <p class="mb-0">Boss: <code class="text-danger">boss / 1234</code></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Authentication Logic Script -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const role = document.getElementById('roleSelect').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorAlert = document.getElementById('errorAlert');
+
+            let isValid = false;
+
+            if (role === 'manager' && username === 'manager' && password === '1234') {
+                isValid = true;
+            } else if (role === 'boss' && username === 'boss' && password === '1234') {
+                isValid = true;
+            }
+
+            if (isValid) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('username', username);
+                window.location.href = 'dashboard.html';
+            } else {
+                errorAlert.classList.remove('d-none');
+            }
+        });
+    </script>
+</body>
+</html>

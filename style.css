@@ -1,0 +1,82 @@
+
+body {
+    background-color: #d1dced !important;
+}
+
+.navbar.bg-dark {
+    background-color: #132e4a !important;
+}
+
+/* Login Page Body Layout */
+body.login-body {
+    background-color: #d5e8fa !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 1rem;
+}
+
+/* Login Split Wrapper */
+.login-split-wrapper {
+    width: 100%;
+    max-width: 950px;
+    background-color: #eaebf1;
+    border-radius: 1.5rem;
+    overflow: hidden;
+}
+
+/* Left Branding Column */
+.branding-section {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.branding-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.branding-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #000;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    letter-spacing: -0.5px;
+    margin-top: 0.5rem;
+}
+
+/* Non-Overlapping Side-by-Side Image Row */
+.image-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.side-img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 1.2rem;
+    border: 3px solid #200b9a;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Right Login Card Container */
+.login-card {
+    width: 100%;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    background-color: #d2cdf2;
+    border: 3px solid #620572;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
