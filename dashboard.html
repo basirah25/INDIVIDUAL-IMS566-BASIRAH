@@ -155,19 +155,6 @@
                 localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
             }
 
-            if (!localStorage.getItem('salesHistory')) {
-                const defaultSales = [
-                    {
-                        txnId: 'TXN-1001',
-                        date: '2026-11-19 14:30',
-                        name: 'Fresh Apple',
-                        type: 'Item Sold',
-                        change: '-5',
-                        actor: 'Manager (manager)'
-                    }
-                ];
-                localStorage.setItem('salesHistory', JSON.stringify(defaultSales));
-            }
         }
 
         if (localStorage.getItem('isLoggedIn') !== 'true') {
