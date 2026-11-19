@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,7 +84,7 @@
         </div>
     </main>
 
-    <!--  Recording a Sale -->
+    <!-- Recording a Sale -->
     <div class="modal fade" id="recordSaleModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -128,28 +129,91 @@
 
     <!-- Sales Logic Script -->
     <script>
+        function ensureDefaultData() {
+            if (!localStorage.getItem('inventoryItems')) {
+                const defaultInventory = [
+                    { sku: 'PRD-101', name: 'Fresh Apple', category: 'Fruit', qty: 45, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Carrot', category: 'Vegetable', qty: 4, price: 1.50 },
+                    { sku: 'PRD-103', name: 'Potato Chips', category: 'Snack', qty: 28, price: 4.50 },
+                    { sku: 'PRD-104', name: 'Mineral Water', category: 'Drink', qty: 50, price: 1.50 },
+                    { sku: 'PRD-105', name: 'Orange Juice', category: 'Drink', qty: 0, price: 1.50 },
+                    { sku: 'PRD-101', name: 'Banana', category: 'Fruit', qty: 20, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Cabbage', category: 'Vegetable', qty: 0, price: 4.50 },
+                    { sku: 'PRD-103', name: 'Snickerz', category: 'Snack', qty: 30, price: 2.50 },
+                    { sku: 'PRD-104', name: 'Soy Milk', category: 'Drink', qty: 12, price: 2.80 },
+                    { sku: 'PRD-105', name: 'Gummy', category: 'Snack', qty: 15, price: 3.50 }
+
+                ];
+                localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
+            }
+
+            let existingSales = null;
+            try {
+                existingSales = JSON.parse(localStorage.getItem('salesHistory'));
+            } catch (e) {
+                existingSales = null;
+            }
+
+            if (!Array.isArray(existingSales) || existingSales.length === 0) {
+                const defaultSales = [
+                    {
+                        txnId: 'TXN-1004',
+                        date: '2026-11-19 16:45',
+                        name: 'Potato Chips',
+                        type: 'Item Sold',
+                        change: '-4',
+                        actor: 'Manager (manager)'
+                    },
+                    {
+                        txnId: 'TXN-1003',
+                        date: '2026-11-19 15:20',
+                        name: 'Mineral Water',
+                        type: 'Restocked',
+                        change: '+20',
+                        actor: 'Boss (boss)'
+                    },
+                    {
+                        txnId: 'TXN-1002',
+                        date: '2026-11-19 14:30',
+                        name: 'Fresh Apple',
+                        type: 'Item Sold',
+                        change: '-5',
+                        actor: 'Manager (manager)'
+                    },
+                    {
+                        txnId: 'TXN-1001',
+                        date: '2026-11-19 11:10',
+                        name: 'Carrot',
+                        type: 'Item Sold',
+                        change: '-3',
+                        actor: 'Manager (manager)'
+                    }
+                ];
+                localStorage.setItem('salesHistory', JSON.stringify(defaultSales));
+            }
+        }
+
         // Security check
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'index.html';
+        } else {
+            ensureDefaultData();
         }
+
         const username = localStorage.getItem('username') || 'User';
         const userRole = localStorage.getItem('userRole') || 'Staff';
         document.getElementById('userInfo').innerHTML = `Welcome, <strong>${username}</strong> (${userRole.toUpperCase()})`;
 
-       document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('username');
-        localStorage.removeItem('userRole');
-        window.location.href = 'index.html';
-    });
-
-        // Initialize salesHistory as an empty array if not already present
-        if (!localStorage.getItem('salesHistory')) {
-            localStorage.setItem('salesHistory', JSON.stringify([]));
-        }
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        });
 
         // Render Sales Table from localStorage
         function renderSalesTable() {
+            ensureDefaultData();
             const salesTableBody = document.getElementById('salesTableBody');
             salesTableBody.innerHTML = '';
 
@@ -190,6 +254,7 @@
 
         // Populate dropdown dynamically from localStorage inventory when modal opens
         function loadInventoryDropdown() {
+            ensureDefaultData();
             const selectDropdown = document.getElementById('saleProductSelect');
             selectDropdown.innerHTML = '<option value="" disabled selected>Choose item...</option>';
 
@@ -208,6 +273,7 @@
         // Handle Sale Form Submission & Stock Validation
         document.getElementById('saleForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            ensureDefaultData();
 
             const selectedSku = document.getElementById('saleProductSelect').value;
             const qtySold = parseInt(document.getElementById('saleQtyInput').value);
@@ -258,7 +324,7 @@
             // Reset form, hide error, and close modal
             document.getElementById('saleForm').reset();
             errorAlert.classList.add('d-none');
-            
+
             const modalElement = document.getElementById('recordSaleModal');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             if (modalInstance) {

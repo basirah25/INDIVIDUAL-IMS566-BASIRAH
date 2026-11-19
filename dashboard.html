@@ -13,7 +13,7 @@
 
 <body class="d-flex flex-column min-vh-100">
 
-     <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="dashboard.html">
@@ -48,7 +48,7 @@
     <main class="container my-4 flex-grow-1">
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold text-dark">System Dashboard</h2>
+                <h2 class="fw-bold text-dark">Mart Storage Dashboard</h2>
                 <p class="text-muted">Overview of storage levels, stock activity, and quick summaries.</p>
             </div>
         </div>
@@ -137,11 +137,51 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        function ensureDefaultData() {
+            if (!localStorage.getItem('inventoryItems')) {
+                const defaultInventory = [
+                    { sku: 'PRD-101', name: 'Fresh Apple', category: 'Fruit', qty: 45, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Carrot', category: 'Vegetable', qty: 4, price: 1.50 },
+                    { sku: 'PRD-103', name: 'Potato Chips', category: 'Snack', qty: 28, price: 4.50 },
+                    { sku: 'PRD-104', name: 'Mineral Water', category: 'Drink', qty: 50, price: 1.50 },
+                    { sku: 'PRD-105', name: 'Orange Juice', category: 'Drink', qty: 0, price: 1.50 },
+                    { sku: 'PRD-101', name: 'Banana', category: 'Fruit', qty: 20, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Cabbage', category: 'Vegetable', qty: 0, price: 4.50 },
+                    { sku: 'PRD-103', name: 'Snickerz', category: 'Snack', qty: 30, price: 2.50 },
+                    { sku: 'PRD-104', name: 'Soy Milk', category: 'Drink', qty: 12, price: 2.80 },
+                    { sku: 'PRD-105', name: 'Gummy', category: 'Snack', qty: 15, price: 3.50 }
+
+                ];
+                localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
+            }
+
+            if (!localStorage.getItem('salesHistory')) {
+                const defaultSales = [
+                    {
+                        txnId: 'TXN-1001',
+                        date: '2026-11-19 14:30',
+                        name: 'Fresh Apple',
+                        type: 'Item Sold',
+                        change: '-5',
+                        actor: 'Manager (manager)'
+                    }
+                ];
+                localStorage.setItem('salesHistory', JSON.stringify(defaultSales));
+            }
+        }
+
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        } else {
+            ensureDefaultData();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('isLoggedIn') !== 'true') {
-                window.location.href = 'index.html';
                 return;
             }
+            ensureDefaultData();
+
             const username = localStorage.getItem('username') || 'User';
             const userRole = localStorage.getItem('userRole') || 'Staff';
             const userInfoElement = document.getElementById('userInfo');
@@ -152,11 +192,11 @@
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('username');
                 localStorage.removeItem('userRole');
-                
+
                 window.location.href = 'index.html';
             });
 
-            // Cards 
+            // Cards
             const inventory = JSON.parse(localStorage.getItem('inventoryItems')) || [];
             let totalProducts = inventory.length;
             let lowStock = 0;

@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <!--  Managing Item (Restock / Change Price / Delete) -->
+    <!-- Managing Item (Restock / Change Price / Delete) -->
     <div class="modal fade" id="manageItemModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -139,7 +139,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="manageSku">
                     <p class="mb-3 text-muted small">Selected Item: <strong id="manageItemNameDisplay" class="text-dark"></strong></p>
-                    
+
                     <!-- Restock -->
                     <form id="restockForm" class="mb-3 pb-3 border-bottom">
                         <h6 class="fw-semibold text-success mb-2"><i class="bi bi-plus-circle me-1"></i> Restock Item</h6>
@@ -150,7 +150,7 @@
                         <button type="submit" class="btn btn-success btn-sm w-100">Confirm Restock</button>
                     </form>
 
-                    <!-- Change Price  -->
+                    <!-- Change Price -->
                     <form id="changePriceForm" class="mb-3 pb-3 border-bottom">
                         <h6 class="fw-semibold text-primary mb-2"><i class="bi bi-tag me-1"></i> Change Price</h6>
                         <div class="mb-2">
@@ -183,10 +183,46 @@
 
     <!-- Inventory Logic Script -->
     <script>
+        function ensureDefaultData() {
+            if (!localStorage.getItem('inventoryItems')) {
+                const defaultInventory = [
+                    { sku: 'PRD-101', name: 'Fresh Apple', category: 'Fruit', qty: 45, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Carrot', category: 'Vegetable', qty: 4, price: 1.50 },
+                    { sku: 'PRD-103', name: 'Potato Chips', category: 'Snack', qty: 28, price: 4.50 },
+                    { sku: 'PRD-104', name: 'Mineral Water', category: 'Drink', qty: 50, price: 1.50 },
+                    { sku: 'PRD-105', name: 'Orange Juice', category: 'Drink', qty: 0, price: 1.50 },
+                    { sku: 'PRD-101', name: 'Banana', category: 'Fruit', qty: 20, price: 2.00 },
+                    { sku: 'PRD-102', name: 'Cabbage', category: 'Vegetable', qty: 0, price: 4.50 },
+                    { sku: 'PRD-103', name: 'Snickerz', category: 'Snack', qty: 30, price: 2.50 },
+                    { sku: 'PRD-104', name: 'Soy Milk', category: 'Drink', qty: 12, price: 2.80 },
+                    { sku: 'PRD-105', name: 'Gummy', category: 'Snack', qty: 15, price: 3.50 }
+                    
+                ];
+                localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
+            }
+
+            if (!localStorage.getItem('salesHistory')) {
+                const defaultSales = [
+                    {
+                        txnId: 'TXN-1001',
+                        date: '2026-11-19 14:30',
+                        name: 'Fresh Apple',
+                        type: 'Item Sold',
+                        change: '-5',
+                        actor: 'Manager (manager)'
+                    }
+                ];
+                localStorage.setItem('salesHistory', JSON.stringify(defaultSales));
+            }
+        }
+
         // Security check
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'index.html';
+        } else {
+            ensureDefaultData();
         }
+
         const username = localStorage.getItem('username') || 'User';
         const userRole = localStorage.getItem('userRole') || 'Staff';
         document.getElementById('userInfo').innerHTML = `Welcome, <strong>${username}</strong> (${userRole.toUpperCase()})`;
@@ -199,26 +235,10 @@
             window.location.href = 'index.html';
         });
 
-        if (!localStorage.getItem('inventoryItems')) {
-            const defaultInventory = [
-                { sku: 'PRD-101', name: 'Fresh Apple', category: 'Fruit', qty: 45, price: 2.00 },
-                { sku: 'PRD-102', name: 'Carrot', category: 'Vegetable', qty: 4, price: 1.50 },
-                { sku: 'PRD-103', name: 'Potato Chips', category: 'Snack', qty: 28, price: 4.50 },
-                { sku: 'PRD-104', name: 'Mineral Water', category: 'Drink', qty: 50, price: 1.50 }
-                { sku: 'PRD-105', name: 'Orange Juice', category: 'Drink', qty: 0, price: 2.50 }
-            ];
-            localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
-        }
-
-       
-        if (!localStorage.getItem('salesHistory')) {
-            localStorage.setItem('salesHistory', JSON.stringify([]));
-        }
-
-        
         function generateNextSku() {
+            ensureDefaultData();
             let inventory = JSON.parse(localStorage.getItem('inventoryItems')) || [];
-            
+
             let numbers = inventory.map(item => {
                 const match = item.sku.match(/\d+/);
                 return match ? parseInt(match[0], 10) : null;
@@ -243,6 +263,7 @@
 
         // Render Inventory Table from localStorage
         function renderInventoryTable() {
+            ensureDefaultData();
             const tableBody = document.getElementById('inventoryTableBody');
             tableBody.innerHTML = '';
 
@@ -282,6 +303,7 @@
         // 1. Add New Item Form Handler
         document.getElementById('addItemForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            ensureDefaultData();
 
             const sku = document.getElementById('newItemSku').value.trim();
             const name = document.getElementById('newItemName').value.trim();
@@ -326,6 +348,7 @@
 
         // 2. Open Manage Modal (Restock / Change Price / Delete)
         function openManageModal(sku) {
+            ensureDefaultData();
             let inventory = JSON.parse(localStorage.getItem('inventoryItems')) || [];
             const item = inventory.find(p => p.sku === sku);
             if (!item) return;
@@ -342,6 +365,7 @@
         // 3. Handle Restock from Manage Modal
         document.getElementById('restockForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            ensureDefaultData();
 
             const sku = document.getElementById('manageSku').value;
             const addQty = parseInt(document.getElementById('restockQtyInput').value);
@@ -383,6 +407,7 @@
         // 4. Handle Change Price from Manage Modal
         document.getElementById('changePriceForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            ensureDefaultData();
 
             const sku = document.getElementById('manageSku').value;
             const newPrice = parseFloat(document.getElementById('newPriceInput').value);
@@ -406,6 +431,7 @@
 
         // 5. Handle Delete Item from Manage Modal
         document.getElementById('deleteItemBtn').addEventListener('click', function() {
+            ensureDefaultData();
             const sku = document.getElementById('manageSku').value;
 
             if (!confirm("Are you sure you want to delete this item from inventory?")) {
