@@ -141,9 +141,15 @@
                     { sku: 'PRD-103', name: 'Snickerz', category: 'Snack', qty: 30, price: 2.50 },
                     { sku: 'PRD-104', name: 'Soy Milk', category: 'Drink', qty: 12, price: 2.80 },
                     { sku: 'PRD-105', name: 'Gummy', category: 'Snack', qty: 15, price: 3.50 }
-
                 ];
                 localStorage.setItem('inventoryItems', JSON.stringify(defaultInventory));
+            }
+
+            if (localStorage.getItem('salesHistoryCleared') === 'true') {
+                if (!localStorage.getItem('salesHistory')) {
+                    localStorage.setItem('salesHistory', JSON.stringify([]));
+                }
+                return;
             }
 
             let existingSales = null;
@@ -246,6 +252,7 @@
         // Clear Log Button Handler
         document.getElementById('clearSalesBtn').addEventListener('click', function() {
             if (confirm("Are you sure you want to clear the sales history?")) {
+                localStorage.setItem('salesHistoryCleared', 'true');
                 localStorage.setItem('salesHistory', JSON.stringify([]));
                 renderSalesTable();
             }
@@ -315,6 +322,7 @@
                 actor: `${userRole.charAt(0).toUpperCase() + userRole.slice(1)} (${username})`
             });
 
+            localStorage.removeItem('salesHistoryCleared');
             localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
 
             // Re-render table to show the new sale
