@@ -54,9 +54,9 @@
                         <div class="mb-3">
                             <label for="roleSelect" class="form-label small fw-semibold">Select Role</label>
                             <select class="form-select" id="roleSelect" required>
-                                <option value="" disabled selected>Choose your role...</option>
+                                <option value="" disabled>Choose your role...</option>
                                 <option value="manager">Store Manager</option>
-                                <option value="boss">Boss</option>
+                                <option value="boss" selected>Boss</option>
                             </select>
                         </div>
 
@@ -64,7 +64,7 @@
                             <label for="username" class="form-label small fw-semibold">Username</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" class="form-control border-start-0" id="username" placeholder="Enter username" required>
+                                <input type="text" class="form-control border-start-0" id="username" value="boss" placeholder="Enter username" required>
                             </div>
                         </div>
 
@@ -72,7 +72,7 @@
                             <label for="password" class="form-label small fw-semibold">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock text-muted"></i></span>
-                                <input type="password" class="form-control border-start-0" id="password" placeholder="Enter password" required>
+                                <input type="password" class="form-control border-start-0" id="password" value="1234" placeholder="Enter password" required>
                             </div>
                         </div>
 
@@ -95,12 +95,35 @@
 
     <!-- Authentication Logic Script -->
     <script>
+        const roleSelect = document.getElementById('roleSelect');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        function applyRoleCredentials(role) {
+            if (role === 'boss') {
+                usernameInput.value = 'boss';
+                passwordInput.value = '1234';
+            } else if (role === 'manager') {
+                usernameInput.value = 'manager';
+                passwordInput.value = '1234';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            roleSelect.value = 'boss';
+            applyRoleCredentials('boss');
+        });
+
+        roleSelect.addEventListener('change', function() {
+            applyRoleCredentials(this.value);
+        });
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const role = document.getElementById('roleSelect').value;
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const role = roleSelect.value;
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
             const errorAlert = document.getElementById('errorAlert');
 
             let isValid = false;
