@@ -55,19 +55,27 @@ body.login-body {
 /* Side-by-Side Image  */
 .image-row {
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
     justify-content: center;
     align-items: center;
     width: 100%;
 }
 
 .side-img {
-    width: 160px;
-    height: 160px;
+    width: clamp(110px, 34vw, 160px);
+    height: clamp(110px, 34vw, 160px);
     object-fit: cover;
     border-radius: 1.2rem;
     border: 3px solid #200b9a;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 576px) {
+    .branding-section,
+    .login-card {
+        padding: 1.5rem 1rem;
+    }
 }
 
 /* Right Login */
@@ -78,4 +86,8 @@ body.login-body {
     background-color: #d2cdf2;
     border: 3px solid #620572;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+footer {
+    background-color: #132e4a;
 }
